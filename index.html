@@ -25,17 +25,12 @@ function e(tagName, attrs, children) {
             element.addEventListener(key.substring(2).toLowerCase(), attrs[key]);
         }
     }
-    // Object.entries(attrs).forEach(([key, value]) => {
-    //     if (key.startsWith('on')) {
-    //         element.addEventListener(key.substring(2).toLowerCase(), value);
-    //     }
-    // });
 
     return element;
 }
 
 function Dog(props) {
-    return e('div', {
+    const element = e('div', {
         style: {
             width: '25%',
             minHeight: '120px',
@@ -44,7 +39,8 @@ function Dog(props) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            float: 'left'
+            float: 'left',
+            overflow: 'hidden'
         }
     }, [e('div', {
         style: {
@@ -52,15 +48,24 @@ function Dog(props) {
             height: '100px',
             background: 'url(./i.jpg)',
             backgroundPosition: props.backgroundPosition,
-            borderRadius: '100%'
+            borderRadius: '100%',
+            transition: 'all .3s'
         },
         onClick: () => {
             if (!speechSynthesis || speechSynthesis.speaking) return;
 
+            element.children[0].style.transform = 'rotate(15deg) scale(1.5)';
+            element.children[0].style.boxShadow = '0 0 20px yellow';
             let utterance = new SpeechSynthesisUtterance(props.msg);
+            utterance.addEventListener('end', () => {
+                element.children[0].style.transform = '';
+                element.children[0].style.boxShadow = '';
+            });
             speechSynthesis.speak(utterance);
         },
-    })])
+    })]);
+
+    return element;
 }
 
 function App() {
