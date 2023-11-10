@@ -1,0 +1,69 @@
+<body>
+<style>
+    body {
+        margin: 0;
+    }
+</style>
+<script>
+function e(tagName = '', attrs = {}, children = []) {
+    const element = document.createElement(tagName);
+
+    Object.assign(element.style, {...attrs.style});
+    element.append(...children);
+    Object.entries(attrs).forEach(([key, value]) => {
+        if (key.startsWith('on')) {
+            element.addEventListener(key.substring(2).toLowerCase(), value);
+        }
+    });
+
+    return element;
+}
+
+function Dog(props = {}) {
+    return e('div', {
+        style: {
+            width: '25%',
+            height: '50vh',
+            background: 'linear-gradient(135deg, #333, #000)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+        }
+    }, [e('div', {
+        style: {
+            width: '100px',
+            height: '100px',
+            background: 'url(./i.jpg)',
+            backgroundPosition: props.backgroundPosition,
+            borderRadius: '100%'
+        },
+        onClick: () => {
+            if (speechSynthesis.speaking) return;
+
+            let utterance = new SpeechSynthesisUtterance(props.msg);
+            speechSynthesis.speak(utterance);
+        },
+    })])
+}
+
+function App() {
+    return e('div', {
+        style: {
+            display: 'flex',
+            flexWrap: 'wrap',
+        }
+    }, [
+        Dog({ backgroundPosition: '-20px -38px', msg: 'rabul spieszy z pomocą' }),
+        Dog({ backgroundPosition: '-130px -47px', msg: 'psi patrol rusza do akcji' }),
+        Dog({ backgroundPosition: '-246px -47px', msg: 'antek wzywa do bazy' }),
+        Dog({ backgroundPosition: '-362px -47px', msg: 'lód czy śnieg, nie poddam się' }),
+        Dog({ backgroundPosition: '-484px -47px', msg: 'działko wodne' }),
+        Dog({ backgroundPosition: '-612px -47px', msg: 'oto pies który lata' }),
+        Dog({ backgroundPosition: '-990px -327px', msg: 'zielone znaczy leć' }),
+        Dog({ backgroundPosition: '-496px -337px', msg: 'czejs się tym zajmie' }),
+    ]);
+}
+
+document.body.append(App());
+</script>
+</body>
