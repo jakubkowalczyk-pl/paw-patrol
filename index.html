@@ -31,11 +31,13 @@ function Dog(props = {}) {
     return e('div', {
         style: {
             width: '25%',
+            minHeight: '120px',
             height: '50vh',
             background: 'linear-gradient(135deg, #333, #000) #000',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            float: 'left'
         }
     }, [e('div', {
         style: {
@@ -57,8 +59,6 @@ function Dog(props = {}) {
 function App() {
     return e('div', {
         style: {
-            display: 'flex',
-            flexWrap: 'wrap',
         }
     }, [
         Dog({ backgroundPosition: '-20px -38px', msg: 'rabul spieszy z pomocą' }),
