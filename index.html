@@ -17,7 +17,7 @@ function e(tagName = '', attrs = {}, children = []) {
     const element = document.createElement(tagName);
 
     Object.assign(element.style, {...attrs.style});
-    element.append(...children);
+    element.appendChild(...children);
     Object.entries(attrs).forEach(([key, value]) => {
         if (key.startsWith('on')) {
             element.addEventListener(key.substring(2).toLowerCase(), value);
@@ -72,7 +72,7 @@ function App() {
     ]);
 }
 
-document.body.append(App());
+document.body.appendChild(App());
 </script>
 </body>
 </html>
