@@ -38,7 +38,7 @@ function Dog(props = {}) {
             borderRadius: '100%'
         },
         onClick: () => {
-            if (speechSynthesis.speaking) return;
+            if (!speechSynthesis || speechSynthesis.speaking) return;
 
             let utterance = new SpeechSynthesisUtterance(props.msg);
             speechSynthesis.speak(utterance);
