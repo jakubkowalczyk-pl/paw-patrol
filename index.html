@@ -13,21 +13,28 @@
     }
 </style>
 <script>
-function e(tagName = '', attrs = {}, children = []) {
+function e(tagName, attrs, children) {
     const element = document.createElement(tagName);
 
-    Object.assign(element.style, {...attrs.style});
-    element.appendChild(...children);
-    Object.entries(attrs).forEach(([key, value]) => {
-        if (key.startsWith('on')) {
-            element.addEventListener(key.substring(2).toLowerCase(), value);
-        }
+    Object.assign(element.style, attrs.style);
+    children && children.forEach(function (e) {
+        element.appendChild(e);
     });
+    for (const key in attrs) {
+        if (key.startsWith('on')) {
+            element.addEventListener(key.substring(2).toLowerCase(), attrs[key]);
+        }
+    }
+    // Object.entries(attrs).forEach(([key, value]) => {
+    //     if (key.startsWith('on')) {
+    //         element.addEventListener(key.substring(2).toLowerCase(), value);
+    //     }
+    // });
 
     return element;
 }
 
-function Dog(props = {}) {
+function Dog(props) {
     return e('div', {
         style: {
             width: '25%',
