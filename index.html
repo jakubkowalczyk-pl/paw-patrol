@@ -89,7 +89,7 @@ function Dog(props) {
 }
 
 function Button(props = {}) {
-    return e('div', {
+    const element = e('div', {
         style :{
             width: '50px',
             height: '50px',
@@ -100,10 +100,13 @@ function Button(props = {}) {
             borderRadius: '100%',
             position: 'fixed',
             zIndex: 1,
-            ...props.style,
         },
         onClick: props.onClick,
     });
+    
+    Object.assign(element.style, props.style);
+
+    return element;
 }
 
 function App() {
