@@ -22,8 +22,9 @@ document.body.appendChild(style);
 
 export default App;
 
-function Dog(props: { msg: string, backgroundPosition: string }) {
+function Dog(props: { msg: string, backgroundPosition: string, video?: string }) {
   const [speaking, setSpeaking] = useState(false);
+  const [video, setVideo] = useState(false);
 
   return <div style={{
     width: '100vw   ',
@@ -51,6 +52,12 @@ function Dog(props: { msg: string, backgroundPosition: string }) {
     onClick={() => {
       if (!speechSynthesis || speechSynthesis.speaking) return;
 
+      if (props.video) {
+        setVideo(true);
+        setTimeout(() => document.querySelector('video')?.play());
+        return;
+      }
+
       let utterance = new SpeechSynthesisUtterance(props.msg);
       utterance.addEventListener('end', () => {
           setSpeaking(false);
@@ -65,6 +72,11 @@ function Dog(props: { msg: string, backgroundPosition: string }) {
       backgroundPosition: props.backgroundPosition,
     }}/>
   </div>
+  {video && 
+    <video onEnded={() => setVideo(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh' }}>
+      <source src={props.video+'.mp4'} type='video/mp4'/>
+    </video>
+  }
 </div>;
 }
 
@@ -90,11 +102,11 @@ function App() {
   const ref = useRef<HTMLDivElement>(null);
 
   const dogs = [
-      { backgroundPosition: '-20px -171px', msg: 'rabul spieszy z pomocą' },
+      { backgroundPosition: '-20px -171px', msg: 'rabul spieszy z pomocą', video: './rabul' },
       { backgroundPosition: '-130px -171px', msg: 'psi patrol rusza do akcji' },
       { backgroundPosition: '-246px -171px', msg: 'antek wzywa do bazy' },
       { backgroundPosition: '-365px -171px', msg: 'lód czy śnieg, nie poddam się' },
-      { backgroundPosition: '-486px -175px', msg: 'działko wodne' },
+      { backgroundPosition: '-486px -175px', msg: 'działko wodne', video: './marshal' },
       { backgroundPosition: '-612px -171px', msg: 'oto pies który lata' },
       { backgroundPosition: '-1109px -317px', msg: 'zielone znaczy leć' },
       { backgroundPosition: '-606px -326px', msg: 'czejs się tym zajmie' },
@@ -102,21 +114,15 @@ function App() {
 
   const prev = () => {
     setIndex(i=> {
-      if (i > 0) {
-        refreshDog();
-        return i-1;
-      };
-      return i;
+      refreshDog();
+      return i > 0 ? i-1 : dogs.length - 1;
     });
   }
 
   const next = () => {     
     setIndex(i=> {
-      if (dogs[i+1]) {
-        refreshDog();
-        return i+1;
-      };
-      return i;
+      refreshDog();
+      return dogs[i+1] ? i+1 : 0;
     });
   }
 
@@ -144,13 +150,13 @@ function App() {
       background: 'linear-gradient(135deg, #333, #000) #000',
     }}>
       {isDogVisible && <Dog {...dogs[index]}/>}
-      {index > 0 && <Button style={{ left: '20px' }} onClick={prev}/>}
-      {dogs[index+1] && <Button style={{ right: '20px' }} onClick={next}/>}
+      <Button style={{ left: '20px' }} onClick={prev}/>
+      <Button style={{ right: '20px' }} onClick={next}/>
     </div>
   );
 }
 
-const touchSupport = 1 || 'ontouchstart' in window || (navigator as any).msMaxTouchPoints;
+const touchSupport = true;
 
 class Point {
   x: number;
