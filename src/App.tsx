@@ -16,13 +16,26 @@ body {
     to {
         transform: translateX(0);
     }
-}`;
+}
+
+@keyframes avatar {
+    0% {
+        box-shadow: 0 0 20px #fff;
+    }
+    50% {
+      box-shadow: 0 0 160px 20px #fff;
+    }
+    100% {
+      box-shadow: 0 0 20px #fff;
+    }
+}
+`;
 
 document.body.appendChild(style);
 
 export default App;
 
-function Dog(props: { msg: string, backgroundPosition: string, video?: string }) {
+function Dog(props: { msg: string, backgroundPosition: string, video?: string, bg?: string }) {
   const [speaking, setSpeaking] = useState(false);
   const [video, setVideo] = useState(false);
 
@@ -40,6 +53,7 @@ function Dog(props: { msg: string, backgroundPosition: string, video?: string })
         width: '200px',
         height: '200px',
         borderRadius: '100%',
+        border: '12px solid #777',
         background: '#fff',
         transition: 'all .3s',
         overflow: 'hidden',
@@ -47,14 +61,15 @@ function Dog(props: { msg: string, backgroundPosition: string, video?: string })
         justifyContent: 'center',
         display: 'flex',
         transform: speaking ? 'rotate(15deg) scale(1.5)' : '',
-        boxShadow: speaking ? '0 0 20px yellow' : '',
+        animation: 'avatar 4s infinite linear',
+        position: 'relative',
     }}
     onClick={() => {
       if (!speechSynthesis || speechSynthesis.speaking) return;
 
       if (props.video) {
         setVideo(true);
-        setTimeout(() => document.querySelector('video')?.play());
+        setTimeout(() => document.querySelector<HTMLAudioElement>('video, audio')?.play());
         return;
       }
 
@@ -66,19 +81,28 @@ function Dog(props: { msg: string, backgroundPosition: string, video?: string })
       speechSynthesis.speak(utterance);
   }}>
     <div style={{
-      width: '50%',
+      width: '59%',
       height: '140px',
       background: 'url(./i.jpg)',
       backgroundPosition: props.backgroundPosition,
     }}/>
+    <div style={{top: 0, left: 0, width: '100%', height: '100%', position: 'absolute', background: 'linear-gradient(transparent, rgba(0,0,0,.5))'}}/>
   </div>
   {video && 
-    <video onEnded={() => setVideo(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh' }}>
-      <source src={props.video+'.mp4'} type='video/mp4'/>
-    </video>
+    <>
+      {isWindowsPhone && <>
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: `url(${props.video}.jpg) center center no-repeat`, backgroundSize: 'contain' }}/>
+        <audio src={props.video+'.mp4'} onEnded={() => setVideo(false)}/>
+      </>}
+      {!isWindowsPhone && 
+        <video src={props.video+'.mp4'} onEnded={() => setVideo(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh' }}/>
+      }
+    </>
   }
 </div>;
 }
+
+const isWindowsPhone = navigator.userAgent.match(/Windows Phone/i);
 
 function Button(props: { style: Partial<CSSStyleDeclaration>, onClick: () => void }) {
   const style = Object.assign({
@@ -86,8 +110,8 @@ function Button(props: { style: Partial<CSSStyleDeclaration>, onClick: () => voi
     height: '50px',
     top: '50%',
     transform: 'translateY(-50%)',
-    border: '4px solid #fff',
-    background: '#0000cc',
+    border: '4px solid #000044',
+    background: 'linear-gradient(blue, #000077)',
     borderRadius: '100%',
     position: 'fixed',
     zIndex: 1,
@@ -102,14 +126,14 @@ function App() {
   const ref = useRef<HTMLDivElement>(null);
 
   const dogs = [
-      { backgroundPosition: '-20px -171px', msg: 'rabul spieszy z pomocą', video: './rabul' },
-      { backgroundPosition: '-130px -171px', msg: 'psi patrol rusza do akcji' },
-      { backgroundPosition: '-246px -171px', msg: 'antek wzywa do bazy' },
-      { backgroundPosition: '-365px -171px', msg: 'lód czy śnieg, nie poddam się' },
-      { backgroundPosition: '-486px -175px', msg: 'działko wodne', video: './marshal' },
-      { backgroundPosition: '-612px -171px', msg: 'oto pies który lata' },
-      { backgroundPosition: '-1109px -317px', msg: 'zielone znaczy leć' },
-      { backgroundPosition: '-606px -326px', msg: 'czejs się tym zajmie' },
+      { backgroundPosition: '-8px -171px', bg: 'yellow', msg: 'rabul spieszy z pomocą', video: './rabul' },
+      { backgroundPosition: '-120px -172px', bg: 'green', msg: 'psi patrol rusza do akcji' },
+      { backgroundPosition: '-234px -171px', bg: 'orange', msg: 'antek wzywa do bazy' },
+      { backgroundPosition: '-353px -171px', bg: 'white', msg: 'lód czy śnieg, nie poddam się' },
+      { backgroundPosition: '-474px -176px', bg: 'red', msg: 'działko wodne', video: './marshal' },
+      { backgroundPosition: '-602px -171px', bg: 'purple', msg: 'oto pies który lata', video: './sky' },
+      { backgroundPosition: '-1099px -317px', bg: 'green', msg: 'zielone znaczy leć', video: './rocky' },
+      { backgroundPosition: '-597px -326px', bg: 'blue', msg: 'czejs się tym zajmie', video: './chase' },
   ];
 
   const prev = () => {
@@ -147,7 +171,7 @@ function App() {
     <div ref={ref} style={{
       width: '100vw',
       height: '100vh',
-      background: 'linear-gradient(135deg, #333, #000) #000',
+      background: `radial-gradient(${dogs[index].bg}, #000)`,
     }}>
       {isDogVisible && <Dog {...dogs[index]}/>}
       <Button style={{ left: '20px' }} onClick={prev}/>
