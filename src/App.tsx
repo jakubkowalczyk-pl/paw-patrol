@@ -127,13 +127,13 @@ function App() {
 
   const dogs = [
       { backgroundPosition: '-8px -171px', bg: 'yellow', msg: 'rabul spieszy z pomocą', video: './rabul' },
-      { backgroundPosition: '-120px -172px', bg: 'green', msg: 'psi patrol rusza do akcji' },
-      { backgroundPosition: '-234px -171px', bg: 'orange', msg: 'antek wzywa do bazy' },
-      { backgroundPosition: '-353px -171px', bg: 'white', msg: 'lód czy śnieg, nie poddam się' },
       { backgroundPosition: '-474px -176px', bg: 'red', msg: 'działko wodne', video: './marshal' },
       { backgroundPosition: '-602px -171px', bg: 'purple', msg: 'oto pies który lata', video: './sky' },
       { backgroundPosition: '-1099px -317px', bg: 'green', msg: 'zielone znaczy leć', video: './rocky' },
       { backgroundPosition: '-597px -326px', bg: 'blue', msg: 'czejs się tym zajmie', video: './chase' },
+      { backgroundPosition: '-120px -172px', bg: 'green', msg: 'psi patrol rusza do akcji' },
+      { backgroundPosition: '-353px -171px', bg: 'white', msg: 'lód czy śnieg, nie poddam się' },
+      { backgroundPosition: '-234px -171px', bg: 'orange', msg: 'antek wzywa do bazy' },
   ];
 
   const prev = () => {
