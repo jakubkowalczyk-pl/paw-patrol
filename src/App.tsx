@@ -90,19 +90,12 @@ function Dog(props: { msg: string, backgroundPosition: string, video?: string, b
   </div>
   {video && 
     <>
-      {isWindowsPhone && <>
-        <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: `url(${props.video}.jpg) center center no-repeat`, backgroundSize: 'contain' }}/>
-        <audio src={props.video+'.mp4'} onEnded={() => setVideo(false)}/>
-      </>}
-      {!isWindowsPhone && 
-        <video src={props.video+'.mp4'} onEnded={() => setVideo(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh' }}/>
-      }
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: `url(${props.video}.jpg) center center no-repeat`, backgroundSize: 'contain' }}/>
+      <audio src={props.video+'.mp3'} onEnded={() => setVideo(false)}/>
     </>
   }
 </div>;
 }
-
-const isWindowsPhone = navigator.userAgent.match(/Windows Phone/i);
 
 function Button(props: { style: Partial<CSSStyleDeclaration>, onClick: () => void }) {
   const style = Object.assign({
@@ -168,7 +161,7 @@ function App() {
   }, []);
 
   return (
-    <div ref={ref} style={{
+    <div ref={ref} onTouchMove={e => e.preventDefault()} style={{
       width: '100vw',
       height: '100vh',
       background: `radial-gradient(${dogs[index].bg}, #000)`,
@@ -176,6 +169,7 @@ function App() {
       {isDogVisible && <Dog {...dogs[index]}/>}
       <Button style={{ left: '20px' }} onClick={prev}/>
       <Button style={{ right: '20px' }} onClick={next}/>
+      {dogs.map(dog => <audio src={dog.video+'.mp3'} preload='auto'/>)}
     </div>
   );
 }
